@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    .Nd, .Bf, .Op { display: inline; }
+    .Pa, .Ad { font-style: italic; }
+    .Ms { font-weight: bold; }
+    .Bl-diag > dt { font-weight: bold; }
+    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
+      font-family: inherit; }
+  </style>
+  <title>IPL(9)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">IPL(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">IPL(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">ipl</code>, <code class="Nm">splraise</code>,
+    <code class="Nm">spldpc</code>, <code class="Nm">splx</code>,
+    <code class="Nm">splget</code> &#x2014; <span class="Nd">raise or lower
+    Interrupt Priority Level (IPL)</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">ipl_t</var>
+  <br/>
+  <code class="Fn">splraise</code>(<var class="Fa" style="white-space: nowrap;">ipl_t
+    ipl</var>);</p>
+<p class="Pp"><var class="Ft">ipl_t</var>
+  <br/>
+  <code class="Fn">spldpc</code>(<var class="Fa" style="white-space: nowrap;">ipl_t
+    ipl</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">splx</code>(<var class="Fa" style="white-space: nowrap;">ipl_t
+    ipl</var>);</p>
+<p class="Pp"><var class="Ft">ipl_t</var>
+  <br/>
+  <code class="Fn">splget</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">These functions are used to modify the interrupt priority level.
+    They are used to block certain categories of interrupts to ensure safe
+    execution of critical sections of code.</p>
+<p class="Pp"></p>
+<p class="Pp">Interrupts are masked by priority, and priorities are
+    hierarchical. When the interrupt priority level is raised, lower-priority
+    interrupts are disabled until the priority level is lowered. This affects
+    delivery of interrupts within the thread that has raised the level. Levels
+    kIPLDPC and above prevent rescheduling, and therefore act on the CPU core as
+    a whole.</p>
+<p class="Pp"></p>
+<p class="Pp">Each interrupt handler is associated with an IPL. Entry to an
+    interrupt handler is always at the IPL the handler is associated with. The
+    IPL can be further raised above that level, but must return to the handler's
+    associated IPL before return.</p>
+<p class="Pp"></p>
+<p class="Pp">The <a class="Xr" href="rcu.9.html">rcu(9)</a> and the
+    <a class="Xr" href="spinlock.9.html">spinlock(9)</a> functionalities also
+    modify IPL as part of their duties.</p>
+<p class="Pp"></p>
+<p class="Pp"></p>
+<p class="Pp">These are the interrupt priority levels from low-to-high, with
+    each higher level blocking additional interrupts:</p>
+<p class="Pp"></p>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="kIPL0"><a class="permalink" href="#kIPL0"><code class="Dv">kIPL0</code></a></dt>
+  <dd>Allows all interrupts. This is the lowest interrupt priority level. All
+      categories of interrupts are unblocked.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="kIPLAST"><a class="permalink" href="#kIPLAST"><code class="Dv">kIPLAST</code></a></dt>
+  <dd>Blocks general non-device interrupts.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="kIPLDispatch"><a class="permalink" href="#kIPLDispatch"><code class="Dv">kIPLDispatch</code></a></dt>
+  <dd>Additionally blocks dispatch-level interrupts.
+    <p class="Pp">This is the level at which the scheduler, DPCs, and RCU
+        callbacks run. At this level and above, the current processor core will
+        not be rescheduled, RCU grace periods will not end, and DPCs will not
+        run.</p>
+    <p class="Pp"></p>
+  </dd>
+  <dt id="kIPLDevice"><a class="permalink" href="#kIPLDevice"><code class="Dv">kIPLDevice</code></a></dt>
+  <dd>Additionally blocks general device-level interrupts.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="kIPLClock"><a class="permalink" href="#kIPLClock"><code class="Dv">kIPLClock</code></a></dt>
+  <dd>Additionally blocks the harldcock interrupt.
+    <p class="Pp"></p>
+  </dd>
+  <dt id="kIPLIPI"><a class="permalink" href="#kIPLIPI"><code class="Dv">kIPLIPI</code></a></dt>
+  <dd>Additionally blocks most inter-processor interrupts (IPIs.)
+    <p class="Pp"></p>
+  </dd>
+  <dt id="kIPLHigh"><a class="permalink" href="#kIPLHigh"><code class="Dv">kIPLHigh</code></a></dt>
+  <dd>Blocks all interrupts. This is the highest interrupt priority level.</dd>
+</dl>
+<p class="Pp"></p>
+<p class="Pp">Note: On some architectures, consecutive subsets of the first four
+    interrupt levels (kIPLHigh, kIPLIPI, kIPLClock, kIPLDevice) may be merged
+    due to platform-specific limitations.</p>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
+<p class="Pp">The following functions are provided for managing the interrupt
+    priority level:</p>
+<p class="Pp"></p>
+<dl class="Bl-tag">
+  <dt id="splraise"><a class="permalink" href="#splraise"><code class="Fn">splraise</code></a>(<var class="Fa">ipl_t
+    ipl</var>)</dt>
+  <dd>Raises the current interrupt priority level to <var class="Fa">ipl</var>
+      and returns the previous IPL.</dd>
+  <dt id="spldpc"><a class="permalink" href="#spldpc"><code class="Fn">spldpc</code></a>(<var class="Fa">void</var>)</dt>
+  <dd>Raises the current interrupt priority level to
+      <code class="Dv">kIPLDPC</code>. and returns the previous IPL.</dd>
+  <dt id="splx"><a class="permalink" href="#splx"><code class="Fn">splx</code></a>(<var class="Fa">ipl_t
+    ipl</var>)</dt>
+  <dd>Restores the interrupt priority level to <var class="Fa">ipl</var>. This
+      function is used to lower the priority level after completing a section
+      that must run at high IPL.</dd>
+  <dt id="splget"><a class="permalink" href="#splget"><code class="Fn">splget</code></a>(<var class="Fa">void</var>)</dt>
+  <dd>Returns the current interrupt priority level.
+    <p class="Pp"></p>
+  </dd>
+</dl>
+<p class="Pp"></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Nm">ipl</code> interface has always been in
+    Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 5, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>
