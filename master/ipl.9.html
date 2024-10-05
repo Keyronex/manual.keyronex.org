@@ -86,10 +86,10 @@
     <p class="Pp"></p>
   </dd>
   <dt id="kIPLAST"><a class="permalink" href="#kIPLAST"><code class="Dv">kIPLAST</code></a></dt>
-  <dd>Blocks general non-device interrupts.
+  <dd>Blocks asynchronous system traps (ASTs) targeting the current thread.
     <p class="Pp"></p>
   </dd>
-  <dt id="kIPLDispatch"><a class="permalink" href="#kIPLDispatch"><code class="Dv">kIPLDispatch</code></a></dt>
+  <dt id="kIPLDPC"><a class="permalink" href="#kIPLDPC"><code class="Dv">kIPLDPC</code></a></dt>
   <dd>Additionally blocks dispatch-level interrupts.
     <p class="Pp">This is the level at which the scheduler, DPCs, and RCU
         callbacks run. At this level and above, the current processor core will

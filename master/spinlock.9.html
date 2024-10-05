@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    .Nd, .Bf, .Op { display: inline; }
+    .Pa, .Ad { font-style: italic; }
+    .Ms { font-weight: bold; }
+    .Bl-diag > dt { font-weight: bold; }
+    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
+      font-family: inherit; }
+  </style>
+  <title>SPINLOCK(9)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">SPINLOCK(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">SPINLOCK(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">spinlock</code>,
+    <code class="Nm">ke_spinlock_init</code>,
+    <code class="Nm">ke_spinlock_acquire</code>,
+    <code class="Nm">ke_spinlock_acquire_at</code>,
+    <code class="Nm">ke_spinlock_acquire_nospl</code>,
+    <code class="Nm">ke_spinlock_release</code>,
+    <code class="Nm">ke_spinlock_release_nospl</code> &#x2014;
+    <span class="Nd">spinlock mutual exclusion mechanism</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_spinlock_init</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
+    *lock</var>);</p>
+<p class="Pp"><var class="Ft">ipl_t</var>
+  <br/>
+  <code class="Fn">ke_spinlock_acquire</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
+    *lock</var>);</p>
+<p class="Pp"><var class="Ft">ipl_t</var>
+  <br/>
+  <code class="Fn">ke_spinlock_acquire_at</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
+    *lock</var>, <var class="Fa" style="white-space: nowrap;">ipl_t
+  ipl</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_spinlock_acquire_nospl</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
+    *lock</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_spinlock_release</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
+    *lock</var>, <var class="Fa" style="white-space: nowrap;">ipl_t
+  ipl</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_spinlock_release_nospl</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
+    *lock</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">Spinlocks are a mutual exclusion mechanism used to synchronise
+    shared state such that only one CPU can access it at a time.</p>
+<p class="Pp">The <a class="Xr" href="ipl.9.html">ipl(9)</a> mechanism is
+    closely integrated with spinlocks; spinlocks may only be held at or above
+    DPC level. Consequently it is illegal and impossible to try to sleep while
+    holding a mutex, neither will the current thread be rescheduled. This is how
+    spinlocks synchronise CPUs as opposed to threads as such; in fact, the
+    spinlock interface is implemented purely with IPL raising on
+  uniprocessors.</p>
+<p class="Pp">As they are held at or above DPC level, while holding a spinlock,
+    <a class="Xr" href="rcu.9.html">rcu(9)</a> grace periods remain in effect,
+    DPCs are masked, rescheduling/waiting is prevented, and certain operations
+    forbidden; see <a class="Xr" href="ipl.9.html">ipl(9)</a> for a full account
+    of the restrictions. A particularly salient restriction is that paged memory
+    may not be accessed while holding a spinlock, unless the memory has been
+    locked resident.</p>
+<p class="Pp">Spinlocks are informally associated with a particular IPL, which
+    is the IPL at which the spinlock may be acquired and held. This is usually
+    DPC level, but may be higher, for example, for spinlocks which may be
+    acquired by device interrupt handlers.</p>
+<p class="Pp">Spinlocks cannot be recursively acquired, and as they are held at
+    a high IPL, they are not suitable for long-running operations.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
+<p class="Pp">The
+    <a class="permalink" href="#ke_spinlock_init"><code class="Fn" id="ke_spinlock_init">ke_spinlock_init</code></a>()
+    function initialises a spinlock and should be called initially;
+    alternatively, the lock may be statically initialised with the macro
+    <code class="Dv">KPINLOCK_INITIALISER</code>.</p>
+<p class="Pp" id="ke_spinlock_acquire">The
+    <a class="permalink" href="#ke_spinlock_acquire"><code class="Fn">ke_spinlock_acquire</code></a>()
+    function acquires a spinlock, raising the IPL to DPC level, and returns the
+    previous IPL, while
+    <a class="permalink" href="#ke_spinlock_acquire_at"><code class="Fn" id="ke_spinlock_acquire_at">ke_spinlock_acquire_at</code></a>()
+    does the same but raises the IPL to the specified level instead of DPC
+    level, and
+    <a class="permalink" href="#ke_spinlock_acquire_nospl"><code class="Fn" id="ke_spinlock_acquire_nospl">ke_spinlock_acquire_nospl</code></a>()
+    acquires a spinlock without raising the IPL - useful for when the IPL is
+    already at the required level.</p>
+<p class="Pp" id="ke_spinlock_release">The
+    <a class="permalink" href="#ke_spinlock_release"><code class="Fn">ke_spinlock_release</code></a>()
+    function releases a spinlock, lowering the IPL to the specified level, which
+    will usually be the IPL returned by the lock function.
+    <a class="permalink" href="#ke_spinlock_release_nospl"><code class="Fn" id="ke_spinlock_release_nospl">ke_spinlock_release_nospl</code></a>()
+    releases a spinlock without lowering the IPL.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp">The spinlock functions may be called from any context so long as
+    the IPL is at or below the spinlock's associated IPL.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">Spinlocks are implemented inline in
+    <span class="Pa">kernel/include/kdk/kern.h</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ipl.9.html">ipl(9)</a>,
+    <a class="Xr" href="rcu.9.html">rcu(9)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Nm">spinlock</code> interface has always been in
+    Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 5, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>

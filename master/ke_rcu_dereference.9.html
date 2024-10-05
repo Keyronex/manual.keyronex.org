@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    .Nd, .Bf, .Op { display: inline; }
+    .Pa, .Ad { font-style: italic; }
+    .Ms { font-weight: bold; }
+    .Bl-diag > dt { font-weight: bold; }
+    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
+      font-family: inherit; }
+  </style>
+  <title>KE_RCU_DEREFERENCE(9)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">KE_RCU_DEREFERENCE(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">KE_RCU_DEREFERENCE(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">ke_rcu_dereference</code>,
+    <code class="Nm">ke_rcu_assign_pointer</code>,
+    <code class="Nm">ke_rcu_exchange_pointer</code> &#x2014;
+    <span class="Nd">read-copy-update pointer operations</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">T *</var>
+  <br/>
+  <code class="Fn">ke_rcu_dereference</code>(<var class="Fa" style="white-space: nowrap;">T
+    **pp</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_rcu_assign_pointer</code>(<var class="Fa" style="white-space: nowrap;">T
+    **pp</var>, <var class="Fa" style="white-space: nowrap;">T *p</var>);</p>
+<p class="Pp"><var class="Ft">T *</var>
+  <br/>
+  <code class="Fn">ke_rcu_exchange_pointer</code>(<var class="Fa" style="white-space: nowrap;">T
+    **pp</var>, <var class="Fa" style="white-space: nowrap;">T *p</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">These are macros for safely reading and updating pointers in data
+    structures subject to RCU reclamation.</p>
+<p class="Pp" id="ke_rcu_dereference"><a class="permalink" href="#ke_rcu_dereference"><code class="Fn">ke_rcu_dereference</code></a>()
+    returns the value of the pointer referred to by <var class="Fa">pp</var> for
+    derference by a caller in an RCU reader critical section.</p>
+<p class="Pp" id="ke_rcu_assign_pointer"><a class="permalink" href="#ke_rcu_assign_pointer"><code class="Fn">ke_rcu_assign_pointer</code></a>()
+    updates the pointer referred to by <var class="Fa">pp</var> to the value
+    <var class="Fa">p</var> for use by an RCU writer.</p>
+<p class="Pp" id="ke_rcu_exchange_pointer"><a class="permalink" href="#ke_rcu_exchange_pointer"><code class="Fn">ke_rcu_exchange_pointer</code></a>()
+    updates the pointer referred to by <var class="Fa">pp</var> to the value
+    <var class="Fa">p</var> and returns the old value for use by an RCU
+  writer.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp"><code class="Fn">ke_rcu_dereference</code>() may be called from an
+    RCU reader critical section.</p>
+<p class="Pp"><code class="Fn">ke_rcu_assign_pointer</code>() and
+    <code class="Fn">ke_rcu_exchange_pointer</code>() may be called from RCU
+    writer context.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">These macros are defined in
+    <span class="Pa">kernel/include/kdk/kern.h</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ipl.9.html">ipl(9)</a>,
+    <a class="Xr" href="rcu.9.html">rcu(9)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Nm">RCU</code> interface appeared in Keyronex in
+    2023.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 5, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>

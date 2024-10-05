@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    table.head, table.foot { width: 100%; }
+    td.head-rtitle, td.foot-os { text-align: right; }
+    td.head-vol { text-align: center; }
+    .Nd, .Bf, .Op { display: inline; }
+    .Pa, .Ad { font-style: italic; }
+    .Ms { font-weight: bold; }
+    .Bl-diag > dt { font-weight: bold; }
+    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
+      font-family: inherit; }
+  </style>
+  <title>RCU(9)</title>
+</head>
+<body>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">RCU(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">RCU(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">rcu</code>,
+    <code class="Nm">ke_rcu_read_lock</code>,
+    <code class="Nm">ke_rcu_read_unlock</code>,
+    <code class="Nm">ke_rcu_call</code>,
+    <code class="Nm">ke_rcu_synchronise</code> &#x2014;
+    <span class="Nd">read-copy-update work deferral mechanism</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">ipl_t</var>
+  <br/>
+  <code class="Fn">ke_rcu_read_lock</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_rcu_read_unlock</code>(<var class="Fa" style="white-space: nowrap;">ipl_t
+    ipl</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_rcu_call</code>(<var class="Fa" style="white-space: nowrap;">rcu_entry_t
+    *entry</var>, <var class="Fa" style="white-space: nowrap;">void
+    (*callback)(void *)</var>, <var class="Fa" style="white-space: nowrap;">void
+    *arg</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_rcu_synchronise</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+<p class="Pp">The Read-Copy-Update (RCU) mechanism is a mechanism for scheduling
+    work to be done after a grace period has passed. This is useful for updating
+    or freeing data structures by guaranteeing that no readers are accessing the
+    data structure by the time it is freed.</p>
+<p class="Pp" id="ke_rcu_read_lock">Readers enter an RCU critical section by
+    calling
+    <a class="permalink" href="#ke_rcu_read_lock"><code class="Fn">ke_rcu_read_lock</code></a>()
+    and leave it by calling
+    <a class="permalink" href="#ke_rcu_read_unlock"><code class="Fn" id="ke_rcu_read_unlock">ke_rcu_read_unlock</code></a>().
+    These very cheap functions raise and lower the IPL respectively - the IPL is
+    raised to <code class="Dv">kIPLDPC</code>. It is forbidden to sleep while
+    within an RCU critical section. (See
+    <a class="Xr" href="ipl.9.html">ipl(9)</a> for further restrictions incurred
+    by the raised IPL.)</p>
+<p class="Pp" id="ke_rcu_call">Writers may schedule work by calling
+    <a class="permalink" href="#ke_rcu_call"><code class="Fn">ke_rcu_call</code></a>()
+    with a pointer to an RCU entry embedded somewhere. This schedules a callback
+    to be called with the given argument after a grace period has elapsed; this
+    grace period is however long it takes until every reader who entered an RCU
+    critical section has left it. The callback <var class="Fa">callback</var>
+    will be called with the argument given in <var class="Fa">arg</var>. Note
+    that the RCU entry cannot be used for anything else until the callback has
+    ran.</p>
+<p class="Pp" id="ke_rcu_synchronise">The
+    <a class="permalink" href="#ke_rcu_synchronise"><code class="Fn">ke_rcu_synchronise</code></a>()
+    function synchronously awaits the end of the grace period.</p>
+<p class="Pp">Readers and writers must take care to use appropriate operations
+    on data subject to RCU reclamation. See
+    <a class="Xr" href="ke_rcu_dereference.9.html">ke_rcu_dereference(9)</a> for
+    routines that readers can use to safely read and writers to safely update
+    pointers. These may not be necessary in certain cases, particularly when
+    using suitable atomic operations, for example when using RCU to provide a
+    fallible reference-count retain function.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp">An RCU critical section may be explicitly entered from any context
+    at or below DPC level, and a critical section is implicit in DPC and
+    interrupt context.</p>
+<p class="Pp">Writers may schedule work from any context at or below DPC level,
+    but may only use <code class="Fn">ke_rcu_synchronise</code>() from thread
+    context at IPL &lt; DPC level.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">RCU is implemented in
+  <span class="Pa">kernel/kern/rcu.c</span></p>
+<p class="Pp">The RCU interface is declared in
+    <span class="Pa">kernel/include/kdk/kern.h</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ipl.9.html">ipl(9)</a>,
+    <a class="Xr" href="ke_rcu_dereference.9.html">ke_rcu_dereference(9)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Nm">RCU</code> interface appeared in Keyronex in
+    2023.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 5, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>

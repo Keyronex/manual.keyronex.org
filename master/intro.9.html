@@ -32,22 +32,24 @@
 </section>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">This section contains documentation related to the kernel
-    internals of the kernel. It covers kernel facilities and functions that are
-    relevant to developers of the kernel, drivers, and modules. These manual
-    pages are intended to be the primary reference for kernel programming and a
-    complement to in-source documentation. Below are presented sections for each
-    high-level division of the kernel, containing links to individual subsystems
-    and functions.</p>
-<p class="Pp"></p>
+<p class="Pp">This section contains documentation related to the internals of
+    the kernel. It covers kernel facilities and functions that are relevant to
+    developers of the kernel, drivers, and modules.</p>
+<p class="Pp">These manual pages are intended to be the primary reference for
+    kernel programming and a practical complement to in-source documentation,
+    which focuses on theoretical and design aspects.</p>
+<p class="Pp">Below are presented sections for each high-level division of the
+    kernel, containing links to individual subsystems and functions.</p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="KERNEL"><a class="permalink" href="#KERNEL">KERNEL</a></h1>
 <dl class="Bl-tag">
   <dt><a class="Xr" href="ipl.9.html">ipl(9)</a></dt>
-  <dd>Interrupt Priority Level mechanism.
-    <p class="Pp"></p>
-  </dd>
+  <dd>Interrupt Priority Level mechanism.</dd>
+  <dt><a class="Xr" href="spinlock.9.html">spinlock(9)</a></dt>
+  <dd>Spin lock mutual exclusion mechanism.</dd>
+  <dt><a class="Xr" href="rcu.9.html">rcu(9)</a></dt>
+  <dd>Read-Copy-Update work deferral mechanism.</dd>
 </dl>
 </section>
 <section class="Sh">
