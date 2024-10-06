@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>dpc.9</title>
+</head>
+<body>
+  <div class="heading">
+  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+  <span>Keyronex manual pages</span>
+  </div>
+  <br>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">DPC(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">DPC(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">dpc</code>,
+    <code class="Nm">ke_dpc_enqueue</code> &#x2014; <span class="Nd">deferred
+    procedure call mechanism</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_dpc_enqueue</code>(<var class="Fa" style="white-space: nowrap;">kdpc_t
+    *dpc</var>);</p>
+</section>
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The Deferred Procedure Call (DPC) mechanism is a mechanism for scheduling work
+  to be carried out at the IPL <code class="Dv">kIPLDPC</code>. (See
+  <a class="Xr" href="ipl.9.html">ipl(9)</a> for more information on IPL, as the
+  DPC mechanism emerges naturally from it.)
+<p class="Pp">DPCs consist of an object of type <var class="Vt">kdpc_t</var>,
+    which contains a function pointer and an argument. When a DPC is enqueued,
+    it is executed immediately if the IPL is low; if the IPL is above
+    <code class="Dv">kIPLDPC</code>, the DPC is appended to a per-processor
+    queue, the elements of which are executed in order when the IPL falls below
+    <code class="Dv">kIPLDPC</code>.</p>
+<p class="Pp">DPCs are used primarily to carry out work that has been deferred
+    from a device interrupt handler. Device interrupt handlers run at an even
+    higher IPL, and hence are unable to perform tasks like signalling
+    synchronisation objects. It is also undesirable to spend too much time in
+    these handlers, as they block other interrupts at
+    <code class="Dv">kIPLDevice</code>.</p>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">The DPC interface is declared in
+    <span class="Pa">kernel/include/kdk/kern.h</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ipl.9.html">ipl(9)</a></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The <code class="Nm">DPC</code> interface has always been in
+    Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 6, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body></html>

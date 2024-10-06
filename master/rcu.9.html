@@ -3,20 +3,15 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    .Nd, .Bf, .Op { display: inline; }
-    .Pa, .Ad { font-style: italic; }
-    .Ms { font-weight: bold; }
-    .Bl-diag > dt { font-weight: bold; }
-    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
-      font-family: inherit; }
-  </style>
-  <title>RCU(9)</title>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>rcu.9</title>
 </head>
 <body>
+  <div class="heading">
+  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+  <span>Keyronex manual pages</span>
+  </div>
+  <br>
 <table class="head">
   <tr>
     <td class="head-ltitle">RCU(9)</td>
@@ -55,12 +50,11 @@
   <br/>
   <code class="Fn">ke_rcu_synchronise</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
 </section>
-<section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">The Read-Copy-Update (RCU) mechanism is a mechanism for scheduling
-    work to be done after a grace period has passed. This is useful for updating
-    or freeing data structures by guaranteeing that no readers are accessing the
-    data structure by the time it is freed.</p>
+The Read-Copy-Update (RCU) mechanism is a mechanism for scheduling work to be
+  done after a grace period has passed. This is useful for updating or freeing
+  data structures by guaranteeing that no readers are accessing the data
+  structure by the time it is freed.
 <p class="Pp" id="ke_rcu_read_lock">Readers enter an RCU critical section by
     calling
     <a class="permalink" href="#ke_rcu_read_lock"><code class="Fn">ke_rcu_read_lock</code></a>()
@@ -90,7 +84,6 @@
     pointers. These may not be necessary in certain cases, particularly when
     using suitable atomic operations, for example when using RCU to provide a
     fallible reference-count retain function.</p>
-</section>
 <section class="Sh">
 <h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
 <p class="Pp">An RCU critical section may be explicitly entered from any context
@@ -126,5 +119,4 @@
     <td class="foot-os">Debian</td>
   </tr>
 </table>
-</body>
-</html>
+</body></html>

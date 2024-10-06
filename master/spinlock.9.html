@@ -3,20 +3,15 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    .Nd, .Bf, .Op { display: inline; }
-    .Pa, .Ad { font-style: italic; }
-    .Ms { font-weight: bold; }
-    .Bl-diag > dt { font-weight: bold; }
-    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
-      font-family: inherit; }
-  </style>
-  <title>SPINLOCK(9)</title>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>spinlock.9</title>
 </head>
 <body>
+  <div class="heading">
+  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+  <span>Keyronex manual pages</span>
+  </div>
+  <br>
 <table class="head">
   <tr>
     <td class="head-ltitle">SPINLOCK(9)</td>
@@ -67,6 +62,15 @@
   <code class="Fn">ke_spinlock_release_nospl</code>(<var class="Fa" style="white-space: nowrap;">kspinlock_t
     *lock</var>);</p>
 </section>
+<h1 class="Sh">TABLE OF CONTENTS</h1>
+<ul class="Bl-compact">
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#FUNCTIONS">FUNCTIONS</a></li>
+  <li><a href="#CONTEXT">CONTEXT</a></li>
+  <li><a href="#CODE_REFERENCES">CODE REFERENCES</a></li>
+  <li><a href="#SEE_ALSO">SEE ALSO</a></li>
+  <li><a href="#HISTORY">HISTORY</a></li>
+</ul>
 <section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
 <p class="Pp">Spinlocks are a mutual exclusion mechanism used to synchronise
@@ -145,5 +149,4 @@
     <td class="foot-os">Debian</td>
   </tr>
 </table>
-</body>
-</html>
+</body></html>

@@ -3,20 +3,15 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    .Nd, .Bf, .Op { display: inline; }
-    .Pa, .Ad { font-style: italic; }
-    .Ms { font-weight: bold; }
-    .Bl-diag > dt { font-weight: bold; }
-    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
-      font-family: inherit; }
-  </style>
-  <title>IPL(9)</title>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>ipl.9</title>
 </head>
 <body>
+  <div class="heading">
+  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+  <span>Keyronex manual pages</span>
+  </div>
+  <br>
 <table class="head">
   <tr>
     <td class="head-ltitle">IPL(9)</td>
@@ -52,11 +47,10 @@
   <br/>
   <code class="Fn">splget</code>(<var class="Fa" style="white-space: nowrap;">void</var>);</p>
 </section>
-<section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">These functions are used to modify the interrupt priority level.
-    They are used to block certain categories of interrupts to ensure safe
-    execution of critical sections of code.</p>
+These functions are used to modify the interrupt priority level. They are used
+  to block certain categories of interrupts to ensure safe execution of critical
+  sections of code.
 <p class="Pp"></p>
 <p class="Pp">Interrupts are masked by priority, and priorities are
     hierarchical. When the interrupt priority level is raised, lower-priority
@@ -116,8 +110,10 @@
 <p class="Pp">Note: On some architectures, consecutive subsets of the first four
     interrupt levels (kIPLHigh, kIPLIPI, kIPLClock, kIPLDevice) may be merged
     due to platform-specific limitations.</p>
+<p class="Pp">As shorthand, &quot;low IPL&quot; refers to IPL less than
+    <code class="Dv">kIPLDPC</code>, and &quot;high IPL&quot; refers to IPL
+    greater than or equal to <code class="Dv">kIPLDPC</code>.</p>
 <p class="Pp"></p>
-</section>
 <section class="Sh">
 <h1 class="Sh" id="FUNCTIONS"><a class="permalink" href="#FUNCTIONS">FUNCTIONS</a></h1>
 <p class="Pp">The following functions are provided for managing the interrupt
@@ -137,11 +133,8 @@
       function is used to lower the priority level after completing a section
       that must run at high IPL.</dd>
   <dt id="splget"><a class="permalink" href="#splget"><code class="Fn">splget</code></a>(<var class="Fa">void</var>)</dt>
-  <dd>Returns the current interrupt priority level.
-    <p class="Pp"></p>
-  </dd>
+  <dd>Returns the current interrupt priority level.</dd>
 </dl>
-<p class="Pp"></p>
 </section>
 <section class="Sh">
 <h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
@@ -155,5 +148,4 @@
     <td class="foot-os">Debian</td>
   </tr>
 </table>
-</body>
-</html>
+</body></html>

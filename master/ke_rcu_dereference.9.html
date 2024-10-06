@@ -3,20 +3,15 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    table.head, table.foot { width: 100%; }
-    td.head-rtitle, td.foot-os { text-align: right; }
-    td.head-vol { text-align: center; }
-    .Nd, .Bf, .Op { display: inline; }
-    .Pa, .Ad { font-style: italic; }
-    .Ms { font-weight: bold; }
-    .Bl-diag > dt { font-weight: bold; }
-    code.Nm, .Fl, .Cm, .Ic, code.In, .Fd, .Fn, .Cd { font-weight: bold;
-      font-family: inherit; }
-  </style>
-  <title>KE_RCU_DEREFERENCE(9)</title>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>ke_rcu_dereference.9</title>
 </head>
 <body>
+  <div class="heading">
+  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+  <span>Keyronex manual pages</span>
+  </div>
+  <br>
 <table class="head">
   <tr>
     <td class="head-ltitle">KE_RCU_DEREFERENCE(9)</td>
@@ -49,10 +44,9 @@
   <code class="Fn">ke_rcu_exchange_pointer</code>(<var class="Fa" style="white-space: nowrap;">T
     **pp</var>, <var class="Fa" style="white-space: nowrap;">T *p</var>);</p>
 </section>
-<section class="Sh">
 <h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
-<p class="Pp">These are macros for safely reading and updating pointers in data
-    structures subject to RCU reclamation.</p>
+These are macros for safely reading and updating pointers in data structures
+  subject to RCU reclamation.
 <p class="Pp" id="ke_rcu_dereference"><a class="permalink" href="#ke_rcu_dereference"><code class="Fn">ke_rcu_dereference</code></a>()
     returns the value of the pointer referred to by <var class="Fa">pp</var> for
     derference by a caller in an RCU reader critical section.</p>
@@ -63,7 +57,6 @@
     updates the pointer referred to by <var class="Fa">pp</var> to the value
     <var class="Fa">p</var> and returns the old value for use by an RCU
   writer.</p>
-</section>
 <section class="Sh">
 <h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
 <p class="Pp"><code class="Fn">ke_rcu_dereference</code>() may be called from an
@@ -96,5 +89,4 @@
     <td class="foot-os">Debian</td>
   </tr>
 </table>
-</body>
-</html>
+</body></html>

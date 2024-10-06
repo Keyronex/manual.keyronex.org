@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>locking.9</title>
+</head>
+<body>
+  <div class="heading">
+  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+  <span>Keyronex manual pages</span>
+  </div>
+  <br>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">LOCKING(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">LOCKING(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">locking</code> &#x2014;
+    <span class="Nd">introduction to locking and synchronization
+    mechanisms</span></p>
+</section>
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+There are several mechanisms in the Keyronex kernel for synchronisation between
+  threads and between threads and interrupt handlers. These mechanisms vary in
+  characteristics.
+<p class="Pp" id="Thread">A major division is between the contexts in which they
+    can be used. Context is mostly defined by what
+    <a class="Xr" href="ipl.9.html">ipl(9)</a> level execution is at.
+    <a class="permalink" href="#Thread"><i class="Em">Thread context</i></a>,
+    for example, is generally at low IPL, while
+    <a class="permalink" href="#DPC"><i class="Em" id="DPC">DPC context</i></a>
+    (see <a class="Xr" href="dpc.9.html">dpc(9)</a>) is at
+    <code class="Dv">kIPLDPC</code>, and
+    <a class="permalink" href="#hard"><i class="Em" id="hard">hard interrupt
+    context</i></a> at <code class="Dv">kIPLDevice</code>. In each case, the IPL
+    level can also be temporarily raised - but it cannot be lowered below the
+    level at which the context was entered.</p>
+<p class="Pp">In general, low IPL refers to an IPL less than
+    <code class="Dv">kIPLDPC</code>, and high IPL to an IPL greater than or
+    equal to <code class="Dv">kIPLDPC</code>.</p>
+<section class="Ss">
+<h2 class="Ss" id="Spinlocks"><a class="permalink" href="#Spinlocks">Spinlocks</a></h2>
+<p class="Pp">Spinlocks are the most basic locking mechanism in the Keyronex
+    kernel, and the only one that can be used in all contexts. Each has an
+    associated an IPL, and execution is raised to that level when the lock is
+    held. This IPL must be greater than <code class="Dv">kIPLDPC</code>. They do
+    not block, but spin until the lock is available. This is why they are not
+    suitable for holding for extended periods of time.</p>
+<p class="Pp">See <a class="Xr" href="spinlock.9.html">spinlock(9)</a> for more
+    information. <a class="Xr" href="ipl.9.html">ipl(9)</a> details the
+    restrictions incurred by high-IPL operation inherent to spinlocks.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Mutexes"><a class="permalink" href="#Mutexes">Mutexes</a></h2>
+<p class="Pp">Mutexes are a heavy-weight mechanism. They can be acquired only
+    from thread context while at IPL less than <code class="Dv">kIPLDPC</code>,
+    but can be released at that IPL in principle. They block, and a thread is
+    put to sleep until the mutex is available.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Events"><a class="permalink" href="#Events">Events</a></h2>
+<p class="Pp">Events can be waited on only from thread context at low IPL, but
+    may be signalled at <code class="Dv">kIPLDPC</code>. They carry a signalled
+    flag that can be set and cleared, and a thread can wait on an event,
+    sleeping until the signalled flag is set. The flag remains set until
+    explicitly cleared.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="Semaphores"><a class="permalink" href="#Semaphores">Semaphores</a></h2>
+<p class="Pp">Everyone knows what semaphores are. The rules on their use in
+    Keyronex are similar to those for events: waiting requires low IPL, but
+    signalling is also allowed at <code class="Dv">kIPLDPC</code>.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="RWLocks"><a class="permalink" href="#RWLocks">RWLocks</a></h2>
+<p class="Pp">Reader-Writer Locks (or RWLocks) will be implemented in the
+    future. They will be the preferred mechanism for most synchronisation (both
+    reader-writer and simple cases) as they will provide priority inheritance,
+    adaptively spin, and be small (word-sized). The APIs currently exist but the
+    implementation is trivial and lacks the features described here.</p>
+</section>
+<section class="Ss">
+<h2 class="Ss" id="RCU"><a class="permalink" href="#RCU">RCU</a></h2>
+<p class="Pp">Read-Copy-Update is a mechanism that allows reader access to data
+    structures without locking or blocking, even while writers are modifying the
+    data, by means of deferring the freeing of old data until all readers have
+    finished with it. Writers still have to synchronise with each other through
+    traditional means like spinlocks or mutexes. RCU is not as easy to use as
+    the other mechanisms.</p>
+<p class="Pp">See <a class="Xr" href="rcu.9.html">rcu(9)</a> for more
+    information.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">The locking manual page was begun on October the 6th, 2024.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 6, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body></html>
