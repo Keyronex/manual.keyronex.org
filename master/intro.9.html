@@ -8,8 +8,8 @@
 </head>
 <body>
   <div class="heading">
-  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
-  <span>Keyronex manual pages</span>
+    <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+    <span>Keyronex manual pages</span>
   </div>
   <br>
 <table class="head">
@@ -47,6 +47,12 @@ This section contains documentation related to the internals of the kernel. It
   <dd>Spin lock mutual exclusion mechanism.</dd>
   <dt><a class="Xr" href="rcu.9.html">rcu(9)</a></dt>
   <dd>Read-Copy-Update work deferral mechanism.</dd>
+  <dt><a class="Xr" href="ke_wait.9.html">ke_wait(9)</a></dt>
+  <dd>Dispatcher object waiting mechanism. (See also the dispatcher objects
+      <a class="Xr" href="kevent.9.html">kevent(9)</a>,
+      <a class="Xr" href="kmutex.9.html">kmutex(9)</a>,
+      <a class="Xr" href="ksemaphore.9.html">ksemaphore(9)</a>, and
+      <a class="Xr" href="ktimer.9.html">ktimer(9)</a>.</dd>
 </dl>
 </section>
 <section class="Sh">
@@ -61,4 +67,5 @@ This section contains documentation related to the internals of the kernel. It
     <td class="foot-os">Debian</td>
   </tr>
 </table>
-</body></html>
+</body>
+</html>

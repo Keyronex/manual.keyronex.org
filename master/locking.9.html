@@ -8,8 +8,8 @@
 </head>
 <body>
   <div class="heading">
-  <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
-  <span>Keyronex manual pages</span>
+    <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+    <span>Keyronex manual pages</span>
   </div>
   <br>
 <table class="head">
@@ -63,6 +63,8 @@ There are several mechanisms in the Keyronex kernel for synchronisation between
     from thread context while at IPL less than <code class="Dv">kIPLDPC</code>,
     but can be released at that IPL in principle. They block, and a thread is
     put to sleep until the mutex is available.</p>
+<p class="Pp">See <a class="Xr" href="kmutex.9.html">kmutex(9)</a> for more
+    information.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Events"><a class="permalink" href="#Events">Events</a></h2>
@@ -71,12 +73,16 @@ There are several mechanisms in the Keyronex kernel for synchronisation between
     flag that can be set and cleared, and a thread can wait on an event,
     sleeping until the signalled flag is set. The flag remains set until
     explicitly cleared.</p>
+<p class="Pp">See <a class="Xr" href="kevent.9.html">kevent(9)</a> for more
+    information.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="Semaphores"><a class="permalink" href="#Semaphores">Semaphores</a></h2>
-<p class="Pp">Everyone knows what semaphores are. The rules on their use in
+<p class="Pp">Everyone knows what a semaphore is. The rules on their use in
     Keyronex are similar to those for events: waiting requires low IPL, but
     signalling is also allowed at <code class="Dv">kIPLDPC</code>.</p>
+<p class="Pp">See <a class="Xr" href="ksemaphore.9.html">ksemaphore(9)</a> for
+    more information.</p>
 </section>
 <section class="Ss">
 <h2 class="Ss" id="RWLocks"><a class="permalink" href="#RWLocks">RWLocks</a></h2>
@@ -108,4 +114,5 @@ There are several mechanisms in the Keyronex kernel for synchronisation between
     <td class="foot-os">Debian</td>
   </tr>
 </table>
-</body></html>
+</body>
+</html>

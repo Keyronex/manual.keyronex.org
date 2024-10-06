@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>kevent.9</title>
+</head>
+<body>
+  <div class="heading">
+    <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+    <span>Keyronex manual pages</span>
+  </div>
+  <br>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">KEVENT(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">KEVENT(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">kevent</code>,
+    <code class="Nm">ke_event_init</code>,
+    <code class="Nm">ke_event_signal</code>,
+    <code class="Nm">ke_event_is_signalled</code>,
+    <code class="Nm">ke_event_clear</code> &#x2014; <span class="Nd">dispatcher
+    event object</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_event_init</code>(<var class="Fa" style="white-space: nowrap;">kevent_t
+    *ev</var>, <var class="Fa" style="white-space: nowrap;">bool
+    signalled</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_event_signal</code>(<var class="Fa" style="white-space: nowrap;">kevent_t
+    *ev</var>);</p>
+<p class="Pp"><var class="Ft">bool</var>
+  <br/>
+  <code class="Fn">ke_event_is_signalled</code>(<var class="Fa" style="white-space: nowrap;">kevent_t
+    *ev</var>);</p>
+<p class="Pp"><var class="Ft">bool</var>
+  <br/>
+  <code class="Fn">ke_event_clear</code>(<var class="Fa" style="white-space: nowrap;">kevent_t
+    *ev</var>);</p>
+</section>
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The dispatcher event object is a dispatcher object that can be waited on by
+  <a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>, defined by the
+  <var class="Vt">kevent_t</var> type.
+<p class="Pp">The event object is in one of two states: signalled or not
+    signalled. While an event object is signalled, it can be acquired by a
+    waiter. The object remains signalled until it is explicitly cleared.</p>
+<p class="Pp" id="ke_event_init">The
+    <a class="permalink" href="#ke_event_init"><code class="Fn">ke_event_init</code></a>()
+    function initialises an event object, setting its signal state to the value
+    specified by the <var class="Fa">signalled</var> parameter.</p>
+<p class="Pp" id="ke_event_signal">The
+    <a class="permalink" href="#ke_event_signal"><code class="Fn">ke_event_signal</code></a>()
+    function sets the signal state of the event object to signalled.</p>
+<p class="Pp" id="ke_event_is_signalled">The
+    <a class="permalink" href="#ke_event_is_signalled"><code class="Fn">ke_event_is_signalled</code></a>()
+    function returns the signal state of the event object.</p>
+<p class="Pp" id="ke_event_clear">The
+    <a class="permalink" href="#ke_event_clear"><code class="Fn">ke_event_clear</code></a>()
+    function sets the signal state of the event object to not signalled.</p>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp">All these functions may be called from any context at or below
+    <code class="Dv">kIPLDPC</code>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">These functions are implemented in
+    <span class="Pa">kernel/kern/event.c</span>.</p>
+<p class="Pp">The interface is declared in
+    <span class="Pa">kernel/include/kdk/kern.h</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>,</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">These interfaces have always been in Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 6, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>

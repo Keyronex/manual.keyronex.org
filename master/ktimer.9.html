@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>ktimer.9</title>
+</head>
+<body>
+  <div class="heading">
+    <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+    <span>Keyronex manual pages</span>
+  </div>
+  <br>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">KTIMER(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">KTIMER(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">ktimer</code>,
+    <code class="Nm">ke_timer_init</code>, <code class="Nm">ke_timer_set</code>,
+    <code class="Nm">ke_timer_cancel</code> &#x2014; <span class="Nd">dispatcher
+    timer object</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_timer_init</code>(<var class="Fa" style="white-space: nowrap;">ktimer_t
+    *timer</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_timer_set</code>(<var class="Fa" style="white-space: nowrap;">ktimer_t
+    *timer</var>, <var class="Fa" style="white-space: nowrap;">uint64_t
+    nanosecs</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_timer_cancel</code>(<var class="Fa" style="white-space: nowrap;">ktimer_t
+    *timer</var>);</p>
+</section>
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The dispatcher timer object is a dispatcher object that can be waited on by
+  <a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>, defined by the
+  <var class="Vt">ktimer_t</var> type.
+<p class="Pp">The timer object is an object that can be set to expire at a
+    certain time in the future. When the timer expires, it becomes signalled and
+    waiters are awoken, then the timer is disabled again and set
+  non-signalled.</p>
+<p class="Pp" id="ke_timer_init">The
+    <a class="permalink" href="#ke_timer_init"><code class="Fn">ke_timer_init</code></a>()
+    function initialises a timer object.</p>
+<p class="Pp" id="ke_timer_set">The
+    <a class="permalink" href="#ke_timer_set"><code class="Fn">ke_timer_set</code></a>()
+    function sets the timer to expire at the time specified by the
+    <var class="Fa">nanosecs</var> parameter.</p>
+<p class="Pp">If the timer is already set, an attempt will be made to cancel the
+    timer. If it cannot be cancelled, which means the timer is currently
+    becoming signalled, the function will spin for a short time until the
+    signalling is complete, and then the timer will be set to the new value.</p>
+<p class="Pp" id="ke_timer_cancel">The
+    <a class="permalink" href="#ke_timer_cancel"><code class="Fn">ke_timer_cancel</code></a>()
+    function tries to cancel the timer. If the timer is already in the process
+    of becoming signalled, the function will spin for a short time until the
+    signalling is complete, and then the timer will be cancelled.</p>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp">All these functions may be called from any context at or below
+    <code class="Dv">kIPLDPC</code>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">These functions are implemented in
+    <span class="Pa">kernel/kern/timer.c</span>.</p>
+<p class="Pp">Additional logic for the timer is implemented in
+    <span class="Pa">kernel/kern/clock.c</span>.</p>
+<p class="Pp">The interface is declared in
+    <span class="Pa">kernel/include/kdk/kern.h</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>,</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">These interfaces have always been in Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 6, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>

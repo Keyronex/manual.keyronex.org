@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>ksemaphore.9</title>
+</head>
+<body>
+  <div class="heading">
+    <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+    <span>Keyronex manual pages</span>
+  </div>
+  <br>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">KSEMAPHORE(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">KSEMAPHORE(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">ksemaphore</code>,
+    <code class="Nm">ke_semaphore_init</code>,
+    <code class="Nm">ke_semaphore_reset</code>,
+    <code class="Nm">ke_semaphore_release</code>,
+    <code class="Nm">ke_semaphore_release_maxone</code> &#x2014;
+    <span class="Nd">dispatcher mutex object</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_semaphore_init</code>(<var class="Fa" style="white-space: nowrap;">ksemaphore_t
+    *sem</var>, <var class="Fa" style="white-space: nowrap;">unsigned
+    count</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_semaphore_reset</code>(<var class="Fa" style="white-space: nowrap;">ksemaphore_t
+    *sem</var>, <var class="Fa" style="white-space: nowrap;">unsigned
+    count</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_semaphore_release</code>(<var class="Fa" style="white-space: nowrap;">ksemaphore_t
+    *sem</var>, <var class="Fa" style="white-space: nowrap;">unsigned
+    adjustment</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_semaphore_release_maxone</code>(<var class="Fa" style="white-space: nowrap;">ksemaphore_t
+    *sem</var>);</p>
+</section>
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The dispatcher semaphore object is a dispatcher object that can be waited on by
+  <a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>, defined by the
+  <var class="Vt">ksemaphore_t</var> type.
+<p class="Pp">The semaphore object is a counter that can be incremented and
+    decremented. When the counter is zero, waiters will be put to sleep until
+    the counter is incremented.</p>
+<p class="Pp">Waiters sleep until the counter is positive, and the counter is
+    decremented when a waiter is satisfied.</p>
+<p class="Pp" id="ke_semaphore_init">The
+    <a class="permalink" href="#ke_semaphore_init"><code class="Fn">ke_semaphore_init</code></a>()
+    function initialises a semaphore object, setting its counter to the value
+    specified by the <var class="Fa">count</var> parameter.</p>
+<p class="Pp" id="ke_semaphore_reset">The
+    <a class="permalink" href="#ke_semaphore_reset"><code class="Fn">ke_semaphore_reset</code></a>()
+    function resets a semaphore object, setting its counter to the value
+    specified by the <var class="Fa">count</var> parameter.</p>
+<p class="Pp" id="ke_semaphore_release">The
+    <a class="permalink" href="#ke_semaphore_release"><code class="Fn">ke_semaphore_release</code></a>()
+    function increments the counter of a semaphore object by the value specified
+    by the <var class="Fa">adjustment</var> parameter.</p>
+<p class="Pp" id="ke_semaphore_release_maxone">The
+    <a class="permalink" href="#ke_semaphore_release_maxone"><code class="Fn">ke_semaphore_release_maxone</code></a>()
+    function increments the counter of a semaphore object by one only if the
+    counter was zero.</p>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp">All these functions may be called from any context at or below
+    <code class="Dv">kIPLDPC</code>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">These functions are implemented in
+    <span class="Pa">kernel/kern/semaphore.c</span>.</p>
+<p class="Pp">The interface is declared in
+    <span class="Pa">kernel/include/kdk/kern.h</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>,</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">These interfaces have always been in Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 6, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>

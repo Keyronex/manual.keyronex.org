@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../mandoc.css" type="text/css" media="all"/>
+  <title>kmutex.9</title>
+</head>
+<body>
+  <div class="heading">
+    <img src="https://github.com/Keyronex/Keyronex/raw/refs/heads/master/docs/keyronex.svg" alt="Keyronex" style="height: 38px; margin-right: 10px;">
+    <span>Keyronex manual pages</span>
+  </div>
+  <br>
+<table class="head">
+  <tr>
+    <td class="head-ltitle">KMUTEX(9)</td>
+    <td class="head-vol">Kernel Developer's Manual</td>
+    <td class="head-rtitle">KMUTEX(9)</td>
+  </tr>
+</table>
+<div class="manual-text">
+<section class="Sh">
+<h1 class="Sh" id="NAME"><a class="permalink" href="#NAME">NAME</a></h1>
+<p class="Pp"><code class="Nm">kmutex</code>,
+    <code class="Nm">ke_mutex_init</code>,
+    <code class="Nm">ke_mutex_release</code>,
+    <code class="Nm">ke_mutex_assert_held</code> &#x2014;
+    <span class="Nd">dispatcher mutex object</span></p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SYNOPSIS"><a class="permalink" href="#SYNOPSIS">SYNOPSIS</a></h1>
+<p class="Pp"><code class="In">#include
+    &lt;<a class="In">kdk/kern.h</a>&gt;</code></p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_mutex_init</code>(<var class="Fa" style="white-space: nowrap;">kevent_t
+    *mutex</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_mutex_release</code>(<var class="Fa" style="white-space: nowrap;">kmutex_t
+    *mutex</var>);</p>
+<p class="Pp"><var class="Ft">void</var>
+  <br/>
+  <code class="Fn">ke_mutex_assert_held</code>(<var class="Fa" style="white-space: nowrap;">kmutex_t
+    *mutex</var>);</p>
+</section>
+<h1 class="Sh" id="DESCRIPTION"><a class="permalink" href="#DESCRIPTION">DESCRIPTION</a></h1>
+The dispatcher mutex object is a dispatcher object that can be waited on by
+  <a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>, defined by the
+  <var class="Vt">kmutex_t</var> type.
+<p class="Pp">The mutex object is in one of two states: held or not held. While
+    a mutex object is held, it cannot be acquired by another thread; the thread
+    that holds the mutex must release it first, and until then, waiters will be
+    put to sleep.</p>
+<p class="Pp" id="ke_mutex_init">The
+    <a class="permalink" href="#ke_mutex_init"><code class="Fn">ke_mutex_init</code></a>()
+    function initialises a mutex object, setting its state to not held.</p>
+<p class="Pp" id="ke_mutex_release">The
+    <a class="permalink" href="#ke_mutex_release"><code class="Fn">ke_mutex_release</code></a>()
+    function releases a mutex object, setting its state to not held. It is an
+    error to release a mutex that is not held.</p>
+<p class="Pp" id="ke_mutex_assert_held">The
+    <a class="permalink" href="#ke_mutex_assert_held"><code class="Fn">ke_mutex_assert_held</code></a>()
+    macro asserts that the mutex is held by the current thread.</p>
+<section class="Sh">
+<h1 class="Sh" id="CONTEXT"><a class="permalink" href="#CONTEXT">CONTEXT</a></h1>
+<p class="Pp">All these functions may be called from any context at or below
+    <code class="Dv">kIPLDPC</code>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="CODE_REFERENCES"><a class="permalink" href="#CODE_REFERENCES">CODE
+  REFERENCES</a></h1>
+<p class="Pp">These functions are implemented in
+    <span class="Pa">kernel/kern/mutex.c</span>.</p>
+<p class="Pp">The interface is declared in
+    <span class="Pa">kernel/include/kdk/kern.h</span>.</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="SEE_ALSO"><a class="permalink" href="#SEE_ALSO">SEE
+  ALSO</a></h1>
+<p class="Pp"><a class="Xr" href="ke_wait.9.html">ke_wait(9)</a>,</p>
+</section>
+<section class="Sh">
+<h1 class="Sh" id="HISTORY"><a class="permalink" href="#HISTORY">HISTORY</a></h1>
+<p class="Pp">These interfaces have always been in Keyronex.</p>
+</section>
+</div>
+<table class="foot">
+  <tr>
+    <td class="foot-date">October 6, 2024</td>
+    <td class="foot-os">Debian</td>
+  </tr>
+</table>
+</body>
+</html>
